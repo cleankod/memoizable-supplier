@@ -21,7 +21,7 @@ public class MemoizableSupplier<T> implements Supplier<T> {
     public T get() {
         T currentValue = this.suppliedValue.get();
         if (currentValue == null) {
-            synchronized(this.suppliedValue) {
+            synchronized (this.suppliedValue) {
                 currentValue = this.suppliedValue.get();
                 if (currentValue == null) {
                     logger.debug("Acquiring the value from the delegate.");

@@ -3,13 +3,13 @@
  */
 package eu.cleankod;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-
 import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class MemoizableSupplierTest {
 
@@ -21,10 +21,10 @@ public class MemoizableSupplierTest {
 
         //when
         var numbers = List.of(
-            supplier.get(),
-            supplier.get(),
-            supplier.get(),
-            supplier.get()
+                supplier.get(),
+                supplier.get(),
+                supplier.get(),
+                supplier.get()
         );
 
         //then
@@ -41,7 +41,7 @@ public class MemoizableSupplierTest {
 
         //then
         assertThat(thrown)
-            .isInstanceOf(NullPointerException.class)
-            .hasMessage("Delegate supplier returned null.");
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Delegate supplier returned null.");
     }
 }

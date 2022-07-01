@@ -14,9 +14,8 @@ public class ExpiringMemoizableSupplier<T> implements Supplier<T> {
 
     private final Supplier<T> delegate;
     private final long durationNanos;
-    private long expirationNanos;
-
     private final AtomicReference<T> suppliedValue = new AtomicReference<>();
+    private long expirationNanos;
 
     public ExpiringMemoizableSupplier(Supplier<T> delegate, long duration, TimeUnit timeUnit) {
         durationNanos = convertToNanos(duration, timeUnit);
