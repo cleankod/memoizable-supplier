@@ -1,11 +1,17 @@
 package eu.cleankod;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 public class ExpiringMemoizableSupplier<T> implements Supplier<T> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExpiringMemoizableSupplier.class);
+
     private final Supplier<T> delegate;
     private final long durationNanos;
     private long expirationNanos;
@@ -24,6 +30,7 @@ public class ExpiringMemoizableSupplier<T> implements Supplier<T> {
         if (this.suppliedValue.get() == null || now - nanos >= 0) {
             synchronized (this.suppliedValue) {
                 if (nanos == expirationNanos) {
+                    logger.debug("Acquiring the value from the delegate.");
                     T actualValue = Objects.requireNonNull(delegate.get(), "Delegate supplier returned null.");
                     this.suppliedValue.set(actualValue);
                     nanos = now + durationNanos;
@@ -32,6 +39,7 @@ public class ExpiringMemoizableSupplier<T> implements Supplier<T> {
                 }
             }
         }
+        logger.debug("Returning memoized value.");
         return this.suppliedValue.get();
     }
 
