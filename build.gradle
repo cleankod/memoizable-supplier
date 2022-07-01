@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.testng:testng:7.6.0'
+    testImplementation 'org.assertj:assertj-core:3.23.1'
+}
+
+tasks.named('test') {
+    // Use TestNG for unit tests.
+    useTestNG()
+}
