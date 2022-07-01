@@ -4,6 +4,7 @@
 package eu.cleankod;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 import org.testng.annotations.Test;
 
@@ -11,11 +12,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MemoizableSupplierTest {
-    private final AtomicLong initialValue = new AtomicLong(0L);
-    private final MemoizableSupplier<Long> supplier = new MemoizableSupplier<>(initialValue::getAndIncrement);
 
     @Test
     public void shouldReturnMemoizedValue() {
+        //given
+        var initialValue = new AtomicLong(0L);
+        var supplier = new MemoizableSupplier<>(initialValue::getAndIncrement);
+
+        //when
         var numbers = List.of(
             supplier.get(),
             supplier.get(),
@@ -23,6 +27,21 @@ public class MemoizableSupplierTest {
             supplier.get()
         );
 
+        //then
         assertThat(numbers).containsOnly(0L);
+    }
+
+    @Test
+    public void shouldNotAcceptDelegatedSupplierReturningNull() {
+        //given
+        var supplier = new MemoizableSupplier<>(() -> null);
+
+        //when
+        Throwable thrown = catchThrowable(supplier::get);
+
+        //then
+        assertThat(thrown)
+            .isInstanceOf(NullPointerException.class)
+            .hasMessage("Delegate supplier returned null.");
     }
 }
